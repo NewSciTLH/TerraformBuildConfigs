@@ -1,5 +1,5 @@
 provider "google" {
-  credentials = file("servacc.json")
+  credentials = file("../servacc.json")
   project = var.project
   region  = var.region
   zone    = var.zone
@@ -11,6 +11,7 @@ resource "google_compute_instance" "default" {
   machine_type = var.machine_type
   zone = var.zone
   can_ip_forward = false
+  deletion_protection = false
 
   tags = ["basic"]
 
@@ -26,6 +27,8 @@ resource "google_compute_instance" "default" {
 
   boot_disk {
     initialize_params {
+      auto_delete = true
+      device_name = "basic_disk"
       image = "debian-cloud/debian-9"
     }
   }
@@ -44,7 +47,7 @@ resource "google_compute_instance" "default" {
   }
 
   metadata = {
-    foo = "bar"
+    Owner = "JeremyQ"
   }
 
   metadata_startup_script = "echo hi > /test.txt"
@@ -52,31 +55,9 @@ resource "google_compute_instance" "default" {
   service_account {
     scopes = ["userinfo-email", "compute-ro", "storage-ro"]
   }
-}
 
-resource "google_container_node_pool" "primary_preemptible_nodes" {
-  name       = "my-node-pool"
-  location   = var.location
-  cluster    = google_container_cluster.primary.name
-  initial_node_count = 1
-
-  autoscaling {
-    min_node_count = 1
-    max_node_count = 9
-  }
-
-  node_config {
-    preemptible  = true
-    machine_type = "n1-standard-1"
-
-    metadata = {
-      disable-legacy-endpoints = "true"
-    }
-
-    oauth_scopes = [
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring",
-      "https://www.googleapis.com/auth/cloud-platform"
-    ]
+  guest_accelerator {
+    type = "nvidia-tesla-k80"
+    count = 1
   }
 }
