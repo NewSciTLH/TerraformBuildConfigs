@@ -6,7 +6,7 @@ provider "google" {
 }
 
 resource "google_compute_instance" "default" {
-  name     = "Basic VM"
+  name     = "basic-vm"
   description = "Basic Compute Instance Virtual Machine"
   machine_type = var.machine_type
   zone = var.zone
@@ -15,20 +15,34 @@ resource "google_compute_instance" "default" {
 
   tags = ["basic"]
 
-  scheduling = {
-    preemtible = true
-    automatic_restart = true
-    on_host_maintenance = "MIGRATE"
+  scheduling {
+    preemptible = true
+    automatic_restart = false
+    on_host_maintenance = "TERMINATE"
   }
+  
+  # Scheduling for non-preemptible instance without GPU. (Last indefinitely until terminated.)
+  # scheduling {
+  #   preemptible = false
+  #   automatic_restart = true
+    # on_host_maintenance = "MIGRATE" # Instances with Guest Accelerators don't support live migration.
+  # }
+  
+  # Scheduling for a preemptible instance. (Lasts 24 hrs.)
+  # scheduling {
+  #   preemptible = true
+  #   automatic_restart = false
+  #   on_host_maintenance = "TERMINATE"
+  # }
 
   labels = {
-    enviroment = "test"
+    environment = "test"
   }
 
   boot_disk {
+    auto_delete = true
+    device_name = "basic_disk"
     initialize_params {
-      auto_delete = true
-      device_name = "basic_disk"
       image = "debian-cloud/debian-9"
     }
   }
@@ -56,8 +70,9 @@ resource "google_compute_instance" "default" {
     scopes = ["userinfo-email", "compute-ro", "storage-ro"]
   }
 
-  guest_accelerator {
-    type = "nvidia-tesla-k80"
-    count = 1
-  }
+  # Adding GPU to Instance.
+  # guest_accelerator {
+  #   type = "nvidia-tesla-p100"
+  #   count = 1
+  # }
 }
