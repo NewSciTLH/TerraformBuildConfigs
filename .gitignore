@@ -2,3 +2,4 @@ servacc.json
 *.tfstate
 *.backup
 .terraform
+key.json
