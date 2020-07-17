@@ -32,13 +32,18 @@ resource "google_container_cluster" "primary" {
       issue_client_certificate = false
     }
   }
+
+  guest_accelerator {
+    type  = "nvidia-tesla-k80"
+    count = 1
+  }
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
   name       = "colorization"
   location   = var.location
   cluster    = google_container_cluster.primary.name
-  initial_node_count = 1
+  initial_node_count = 3
 
   autoscaling {
     min_node_count = 0
@@ -46,7 +51,7 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   }
 
   node_config {
-    preemptible  = true
+    preemptible  = false
     machine_type = "n1-standard-4"
 
     metadata = {

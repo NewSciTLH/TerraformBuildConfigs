@@ -32,6 +32,11 @@ resource "google_container_cluster" "primary" {
       issue_client_certificate = false
     }
   }
+
+  # guest_accelerator {
+  #   type  = "nvidia-tesla-k80"
+  #   count = 1
+  # }
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
