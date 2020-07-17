@@ -16,11 +16,11 @@
 steps:
     - id: 'Docker Build'
       name: 'gcr.io/cloud-builders/docker'
-      args: ['build', '-t', 'gcr.io/$PROJECT_ID/auto_colorization:$COMMIT_SHA', '.']
+      args: ['build', '-t', 'gcr.io/$PROJECT_ID/auto_colorization:$COMMIT_SHA', '-t', 'gcr.io/$PROJECT_ID/auto_colorization:$BRANCH_NAME', '.']
 
     - id: 'Docker Publish to GCR'
       name: 'gcr.io/cloud-builders/docker'
-      args: ['push', 'gcr.io/$PROJECT_ID/auto_colorization:$COMMIT_SHA']
+      args: ['push', 'gcr.io/$PROJECT_ID/auto_colorization']
 
     - id: 'Show Branch Name'
       name: 'alpine'
@@ -91,7 +91,7 @@ steps:
       - | 
           if [ -d "environments/$BRANCH_NAME/" ]; then
             cd environments/$BRANCH_NAME      
-            terraform apply -auto-approve -var "container_image=gcr.io/$PROJECT_ID/teditor:$COMMIT_SHA" -var "project=$PROJECT_ID"
+            terraform apply -auto-approve -var "container_image=gcr.io/$PROJECT_ID/auto_colorization:$COMMIT_SHA" -var "project=$PROJECT_ID"
           else
             echo "***************************** SKIPPING APPLYING *******************************"
             echo "Branch '$BRANCH_NAME' does not represent an official environment."
