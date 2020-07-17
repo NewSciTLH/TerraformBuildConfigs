@@ -1,8 +1,6 @@
 variable "project" {
     type = string
-    default = "insert-project-here"
 }
-
 variable "region" {
     type = string
     default = "us-central1"
@@ -15,7 +13,7 @@ variable "zone" {
 
 variable "location" {
     type = string
-    default = "us-east1"
+    default = "us-central1-c"
 }
 
 variable "gke_username" {

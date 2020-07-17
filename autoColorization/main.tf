@@ -33,10 +33,12 @@ resource "google_container_cluster" "primary" {
     }
   }
 
-  guest_accelerator {
-    type  = "nvidia-tesla-k80"
-    count = 1
-  }
+  # node_config {
+  #   guest_accelerator {
+  #     type  = "nvidia-tesla-k80"
+  #     count = 1
+  #   }
+  # }
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
@@ -63,5 +65,10 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
       "https://www.googleapis.com/auth/monitoring",
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+
+    guest_accelerator {
+      type  = "nvidia-tesla-k80"
+      count = 1
+    }
   }
 }
