@@ -1,5 +1,5 @@
 provider "google" {
-  credentials = file("servacc.json")
+  credentials = file("../servacc.json")
   project = var.project
   region  = var.region
   zone    = var.zone
