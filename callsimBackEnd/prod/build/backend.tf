@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "newsci-divvyup-239622-tfstate"
+    bucket = "call-sim-tfstate"
     prefix = "callsim/prod/build"
     credentials = "../../servacc.json"
   }

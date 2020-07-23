@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "call-sim-239622-tfstate"
+    bucket = "call-sim-tfstate"
     prefix = "callsim/dev/backend"
   }
 }
