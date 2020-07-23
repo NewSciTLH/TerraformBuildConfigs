@@ -6,7 +6,7 @@ provider "google" {
 }
 
 resource "google_compute_instance" "default" {
-  name     = "dev-autocolor"
+  name     = "dev-call-sim-frontend"
   description = "Compute instance mimicing a node of the Auto Colorization GKE Cluster. Used for development purposes."
   machine_type = var.machine_type
   zone = var.zone
@@ -61,7 +61,7 @@ resource "google_compute_instance" "default" {
   }
 
   metadata = {
-    Owner = "NewSci-Divvyup"
+    Owner = "NewSci-911"
     gce-container-declaration = module.gce-container.metadata_value
   }
 
@@ -72,18 +72,18 @@ resource "google_compute_instance" "default" {
   }
 
   # Adding GPU to Instance.
-  guest_accelerator {
-    type = "nvidia-tesla-k80"
-    count = 1
-  }
+  # guest_accelerator {
+  #   type = "nvidia-tesla-k80"
+  #   count = 1
+  # }
 }
 
 resource "google_compute_network" "vpc_network" {
-  name = "dev-auto-color-network"
+  name = "dev-call-sim-frontend-network"
 }
 
 resource "google_compute_firewall" "port-access" {
-  name    = "open-flask-port-dev-auto-color"
+  name    = "open-flask-port-dev-call-sim-frontend"
   network = google_compute_network.vpc_network.name
 
   allow {
